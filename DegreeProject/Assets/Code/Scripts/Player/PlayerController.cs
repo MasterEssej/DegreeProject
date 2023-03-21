@@ -157,8 +157,8 @@ public class PlayerController : MonoBehaviour
                 TopDownCamera.gameObject.SetActive(false);
 
                 //when toggling to SC
-                rb.useGravity = true;
-                rb.isKinematic = false;
+                //rb.useGravity = true;
+                //rb.isKinematic = false;
 
                 BindSideScrollerControls();
                 UnbindTopDownControls();

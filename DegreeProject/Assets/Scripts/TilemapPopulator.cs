@@ -14,8 +14,20 @@ public class TilemapPopulator : MonoBehaviour
     public Grid TopDownGrid;
     public Tilemap topDownMap;
 
+    public TileGridStruct tileGrid;
+
     [SerializeField]
     List<KeyValuePair<Vector2Int, TileBase>> FetchedTiles;
+
+    private void Start()
+    {
+        tileGrid = new();
+        tileGrid.grid = TopDownGrid;
+
+        tileGrid.tilemaps = tileGrid.grid.GetComponentsInChildren<Tilemap>();
+        Debug.Log($"Tilemaps: {tileGrid.tilemaps.Length}");
+
+    }
 
     [ContextMenu("Run FetchMap")]
     public void FetchSCMap()
@@ -23,19 +35,46 @@ public class TilemapPopulator : MonoBehaviour
         sideScrollerMap.ClearAllTiles();
         //Fetch player pos
         int fetchedZposition = Mathf.FloorToInt(playerRef.transform.position.z);
-        int fetchedXPosition = Mathf.FloorToInt(playerRef.transform.position.x);
+        int fetchedXposition = Mathf.FloorToInt(playerRef.transform.position.x);
+
+        //Line up SideScroller tilemap with player
+        var scTransform = sideScrollerMap.transform;
+        scTransform.position = new Vector3(scTransform.position.x, scTransform.position.y, fetchedZposition);
 
         int searchWidth = 10;
 
         //search through and fill Fetched tiles with tiles form topdowngrid;
-        for (int x = fetchedXPosition-searchWidth; x < fetchedXPosition + searchWidth; x++)
+        for(int i = 0; i < tileGrid.tilemaps.Length; i++)
         {
-            sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(TopDownGrid.transform.position.y - 1), 0) ,topDownMap.GetTile(new Vector3Int(x, 0, fetchedZposition)));
-            //FetchedTiles.Add(new KeyValuePair<new Vector2Int(x, 0), topDownMap.GetTile(new Vector3Int(x, 0, fetchedZposition)) > );
+            for (int x = fetchedXposition-searchWidth; x < fetchedXposition + searchWidth; x++)
+            {
+                sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0) ,tileGrid.tilemaps[i].GetTile(new Vector3Int(x, fetchedZposition, 0)));
+                //FetchedTiles.Add(new KeyValuePair<new Vector2Int(x, 0), topDownMap.GetTile(new Vector3Int(x, 0, fetchedZposition)) > );
+            }
         }
 
         //add tiles to respective position in sideScrollerGrid
+
+
+        //For Rotation:
+        //Rotate SideScroller view
+        //Swap fetchedZposition and fetchedXposition
+        //Swap x and fetchedZposition in GetTile
+        //Done
+
+
     }
 
+
+
+
+}
+
+public struct TileGridStruct
+{
+
+    public Grid grid;
+
+    public Tilemap[] tilemaps;
 
 }
