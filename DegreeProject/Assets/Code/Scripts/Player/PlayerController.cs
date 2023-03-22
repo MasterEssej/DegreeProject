@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,11 +28,20 @@ public class PlayerController : MonoBehaviour
     public GameObject TopDownCamera;
     public GameObject SideScrollerCamera;
 
+    private float cameraRotation = 0f;
+    private float rotationFixer = 1f;
+
     private InputMaster controls;
 
 
     public TilemapPopulator tmp;
 
+    [SerializeField]
+    private Tilemap SideScrollerMap;
+
+    private int tileRotatorX = 1;
+    private int tileRotatorZ = 1;
+    private int angleInt = 1;
 
 
     private void Start()
@@ -89,8 +99,8 @@ public class PlayerController : MonoBehaviour
     private void BindSideScrollerControls()
     {
         Debug.Log("Bound sideScroller");
-        controls.SideScroller.LeftRight.performed += OnMoveInputTopDown;
-        controls.SideScroller.LeftRight.canceled += OnMoveInputTopDown;
+        controls.SideScroller.LeftRight.performed += OnMoveInputSideScroller;
+        controls.SideScroller.LeftRight.canceled += OnMoveInputSideScroller;
         controls.SideScroller.Jump.performed += OnJumpInput;
     }
 
@@ -105,6 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Bound General");
         controls.General.SwitchView.performed += SwitchMode;
+        controls.General.RotateView.performed += OnRotateInput;
     }
 
     private void UnbindGeneral()
@@ -124,9 +135,49 @@ public class PlayerController : MonoBehaviour
 
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
-        rb.AddForce(Vector3.up * 5);
+        Debug.Log("Jumping");
+        rb.AddForce(Vector3.up * 500);
     }
 
+    private void OnRotateInput(InputAction.CallbackContext obj)
+    {
+        float rotationInput = obj.ReadValue<float>();
+
+        rotationFixer = -rotationFixer;
+
+        Transform scCam = SideScrollerCamera.transform;
+        scCam.position = new Vector3(scCam.position.z * rotationInput * rotationFixer, scCam.position.y, scCam.position.x * rotationInput * rotationFixer);
+
+
+        Vector3 rotationTD = new(0, 0, rotationInput*90);
+        Vector3 rotationSC = new(0, rotationInput*-90, 0);
+        Vector3 rotationTilemap = new(0, rotationInput*-90, 0);
+
+        TopDownCamera.transform.Rotate(rotationTD);
+        scCam.Rotate(rotationSC);
+
+        SideScrollerMap.transform.Rotate(rotationTilemap);
+
+        cameraRotation += rotationInput;
+
+        if(scCam.rotation.eulerAngles.y > 90 || scCam.rotation.eulerAngles.y < -90)
+        {
+            tileRotatorX = -1;
+        }
+        else
+        {
+            tileRotatorX = 1;
+        }
+        if(scCam.rotation.eulerAngles.y == -90) // fix plz
+        {
+            tileRotatorZ = -1;
+        }
+        else
+        {
+            tileRotatorZ = 1;
+        }
+
+    }
 
     private void TopDownMove()
     {
@@ -137,7 +188,7 @@ public class PlayerController : MonoBehaviour
     private void SideScrollerMove()
     {
         var modifier = moveSpeed * Time.fixedDeltaTime * moveInputSideScroller;
-        rb.MovePosition(rb.position + new Vector3(modifier, 0 ,0));
+        rb.MovePosition(rb.position + new Vector3(modifier, 0, 0));
     }
 
 
@@ -152,13 +203,13 @@ public class PlayerController : MonoBehaviour
 
 
             case ControlMode.TopDown:
-                tmp.FetchSCMap();
+                tmp.FetchSCMap(tileRotatorX, tileRotatorZ, rotationFixer);
                 SideScrollerCamera.gameObject.SetActive(true);
                 TopDownCamera.gameObject.SetActive(false);
 
                 //when toggling to SC
-                //rb.useGravity = true;
-                //rb.isKinematic = false;
+                rb.useGravity = true;
+                rb.isKinematic = false;
 
                 BindSideScrollerControls();
                 UnbindTopDownControls();

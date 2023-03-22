@@ -199,6 +199,15 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateView"",
+                    ""type"": ""Button"",
+                    ""id"": ""ba1a00b3-974c-4d0d-9719-9d2560fd3c2c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,39 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""action"": ""SwitchView"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""721adaad-b637-424b-a6f3-e4d3cdf1a00a"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateView"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""4dc0ae42-b0ca-413c-bfac-29f8699989fe"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""af9077d1-19f9-4a60-b0ed-da2415840bd8"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -228,6 +270,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
         // General
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_SwitchView = m_General.FindAction("SwitchView", throwIfNotFound: true);
+        m_General_RotateView = m_General.FindAction("RotateView", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -362,11 +405,13 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_General;
     private IGeneralActions m_GeneralActionsCallbackInterface;
     private readonly InputAction m_General_SwitchView;
+    private readonly InputAction m_General_RotateView;
     public struct GeneralActions
     {
         private @InputMaster m_Wrapper;
         public GeneralActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
         public InputAction @SwitchView => m_Wrapper.m_General_SwitchView;
+        public InputAction @RotateView => m_Wrapper.m_General_RotateView;
         public InputActionMap Get() { return m_Wrapper.m_General; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -379,6 +424,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @SwitchView.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnSwitchView;
                 @SwitchView.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnSwitchView;
                 @SwitchView.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnSwitchView;
+                @RotateView.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnRotateView;
+                @RotateView.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnRotateView;
+                @RotateView.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnRotateView;
             }
             m_Wrapper.m_GeneralActionsCallbackInterface = instance;
             if (instance != null)
@@ -386,6 +434,9 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                 @SwitchView.started += instance.OnSwitchView;
                 @SwitchView.performed += instance.OnSwitchView;
                 @SwitchView.canceled += instance.OnSwitchView;
+                @RotateView.started += instance.OnRotateView;
+                @RotateView.performed += instance.OnRotateView;
+                @RotateView.canceled += instance.OnRotateView;
             }
         }
     }
@@ -402,5 +453,6 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
     public interface IGeneralActions
     {
         void OnSwitchView(InputAction.CallbackContext context);
+        void OnRotateView(InputAction.CallbackContext context);
     }
 }
