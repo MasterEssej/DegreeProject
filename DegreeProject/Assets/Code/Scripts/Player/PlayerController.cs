@@ -168,13 +168,13 @@ public class PlayerController : MonoBehaviour
         {
             tileRotatorX = 1;
         }
-        if(scCam.rotation.eulerAngles.y == -90) // fix plz
+        if(scCam.rotation.eulerAngles.y == 270) // fix plz
         {
-            tileRotatorZ = -1;
+            tileRotatorZ = 1;
         }
         else
         {
-            tileRotatorZ = 1;
+            tileRotatorZ = -1;
         }
 
     }
