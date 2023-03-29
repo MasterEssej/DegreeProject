@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveInputTopDown(InputAction.CallbackContext obj)
     {
-        moveInputTopDown = obj.ReadValue<Vector3>();
+        moveInputTopDown = Quaternion.AngleAxis(cameraRotation, Vector3.up) * obj.ReadValue<Vector3>();
     }
 
     private void OnMoveInputSideScroller(InputAction.CallbackContext obj)
@@ -158,9 +158,10 @@ public class PlayerController : MonoBehaviour
 
         SideScrollerMap.transform.Rotate(rotationTilemap);
 
-        cameraRotation += rotationInput;
+        //cameraRotation += rotationInput;
 
-        if(scCam.rotation.eulerAngles.y > 90 || scCam.rotation.eulerAngles.y < -90)
+        cameraRotation = scCam.rotation.eulerAngles.y;
+        if(cameraRotation > 90 || cameraRotation < -90)
         {
             tileRotatorX = -1;
         }
@@ -168,7 +169,7 @@ public class PlayerController : MonoBehaviour
         {
             tileRotatorX = 1;
         }
-        if(scCam.rotation.eulerAngles.y == 270) // fix plz
+        if(cameraRotation == 270) // fix plz
         {
             tileRotatorZ = 1;
         }
@@ -194,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchMode(InputAction.CallbackContext obj)
     {
-        Debug.Log($"switchmode called {mode.ToString()}");
+        Debug.Log($"switchmode called {mode}");
         switch (mode)
         {
             case ControlMode.none:

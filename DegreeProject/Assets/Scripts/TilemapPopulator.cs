@@ -8,6 +8,7 @@ public class TilemapPopulator : MonoBehaviour
 {
     public GameObject playerRef;
 
+    public TileConverter converter;
 
     public Grid SideScrollerGrid;
     public Tilemap sideScrollerMap;
@@ -41,20 +42,42 @@ public class TilemapPopulator : MonoBehaviour
         //search through and fill Fetched tiles with tiles form topdowngrid;
         for(int i = 0; i < tileGrid.tilemaps.Length; i++)
         {
-            if(angleCheck == 1)
+            //if(angleCheck == 1)
+            //{
+            //    for (int x = fetchedXposition - searchWidth; x < fetchedXposition + searchWidth; x++)
+            //    {
+            //        sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(x*rotationX, fetchedZposition, 0)));
+            //    }
+            //}
+            //else if(angleCheck == -1)
+            //{
+            //    for (int z = fetchedZposition - searchWidth; z < fetchedZposition + searchWidth; z++)
+            //    {
+            //        sideScrollerMap.SetTile(new Vector3Int(z, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(fetchedXposition, z*rotationZ, 0)));
+            //    }
+            //}
+
+            if (angleCheck == 1)
             {
                 for (int x = fetchedXposition - searchWidth; x < fetchedXposition + searchWidth; x++)
                 {
-                    sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(x*rotationX, fetchedZposition, 0)));
+                    var tile = tileGrid.tilemaps[i].GetTile(new Vector3Int(x * rotationX, fetchedZposition, 0));
+                    var newTile = converter.ConvertTile(tile);
+                    sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), newTile);
                 }
             }
-            else if(angleCheck == -1)
+            else if (angleCheck == -1)
             {
                 for (int z = fetchedZposition - searchWidth; z < fetchedZposition + searchWidth; z++)
                 {
-                    sideScrollerMap.SetTile(new Vector3Int(z, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(fetchedXposition, z*rotationZ, 0)));
+                    var tile = tileGrid.tilemaps[i].GetTile(new Vector3Int(fetchedXposition, z * rotationZ, 0));
+                    var newTile = converter.ConvertTile(tile);
+                    sideScrollerMap.SetTile(new Vector3Int(z, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), newTile);
                 }
             }
+
+
+
         }
 
         //add tiles to respective position in sideScrollerGrid
