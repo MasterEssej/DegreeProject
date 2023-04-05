@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
     private void OnJumpInput(InputAction.CallbackContext obj)
     {
         Debug.Log("Jumping");
-        rb.AddForce(Vector3.up * 500);
+        rb.AddForce(Vector3.up * 250);
     }
 
     private void OnRotateInput(InputAction.CallbackContext obj)
@@ -207,6 +207,8 @@ public class PlayerController : MonoBehaviour
                 tmp.FetchSCMap(tileRotatorX, tileRotatorZ, rotationFixer);
                 SideScrollerCamera.gameObject.SetActive(true);
                 TopDownCamera.gameObject.SetActive(false);
+
+                transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Floor(transform.position.z) + 0.5f);
 
                 //when toggling to SC
                 rb.useGravity = true;

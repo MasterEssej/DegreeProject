@@ -35,7 +35,7 @@ public class TilemapPopulator : MonoBehaviour
 
         //Line up SideScroller tilemap with player
         var scTransform = sideScrollerMap.transform;
-        scTransform.position = new Vector3(scTransform.position.x, scTransform.position.y, fetchedZposition);
+        scTransform.position = new Vector3(scTransform.position.x, scTransform.position.y, fetchedZposition + 0.5f);
 
         int searchWidth = 10;
 
