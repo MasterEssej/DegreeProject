@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -90,6 +91,21 @@ public class TilemapPopulator : MonoBehaviour
         //Done
 
 
+    }
+
+    
+    
+    // sort int arguments a,b,z in ascending order. after sorting the ints, create a dictionary with the sorted ints as values and their number in the sorted order as keys starting with 1. return the sorted ints as a string.
+    public string SortInts(int a, int b, int c)
+    {
+        int[] ints = new int[3] { a, b, c };
+        System.Array.Sort(ints);
+        Dictionary<int, int> dict = new Dictionary<int, int>();
+        for (int i = 0; i < ints.Length; i++)
+        {
+            dict.Add(i + 1, ints[i]);
+        }
+        return dict[1].ToString() + dict[2].ToString() + dict[3].ToString();
     }
 
 
