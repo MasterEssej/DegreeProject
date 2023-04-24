@@ -18,12 +18,27 @@ public class TilemapPopulator : MonoBehaviour
 
     public TileGridStruct tileGrid;
 
+    private float scMapOffsetX = 0f;
+    private float scMapOffsetZ = 0f;
+
+    private float newSCPosX;
+    private float newscPosZ;
+
+    private Transform scTransform;
+    private Vector3 scInitialPosition;
+
     private void Start()
     {
         tileGrid = new();
         tileGrid.grid = TopDownGrid;
 
         tileGrid.tilemaps = tileGrid.grid.GetComponentsInChildren<Tilemap>();
+
+        // store sideScrollerMap.transform in a variable that will not change even if the transform changes.
+        
+
+        scInitialPosition = sideScrollerMap.transform.position;
+        scTransform = sideScrollerMap.transform;
     }
 
     [ContextMenu("Run FetchMap")]
@@ -33,30 +48,43 @@ public class TilemapPopulator : MonoBehaviour
         //Fetch player pos
         int fetchedZposition = Mathf.FloorToInt(playerRef.transform.position.z);
         int fetchedXposition = Mathf.FloorToInt(playerRef.transform.position.x);
+        
+        if(rotationX == 1)
+        {
+            scMapOffsetX = 0f;
+        }
+        else if(rotationX == -1)
+        {
+            scMapOffsetX = 1f;
+        }
+        if(rotationZ == 1)
+        {
+            scMapOffsetZ = 0f;
+        }
+        else if(rotationZ == -1)
+        {
+            scMapOffsetZ = 1f;
+        }
 
         //Line up SideScroller tilemap with player
-        var scTransform = sideScrollerMap.transform;
-        scTransform.position = new Vector3(scTransform.position.x, scTransform.position.y, fetchedZposition + 0.5f);
+        if(angleCheck == 1)
+        {   
+            newSCPosX = scInitialPosition.x + scMapOffsetX;
+            newscPosZ = fetchedZposition + scMapOffsetX;
+        }
+        else if(angleCheck == -1)
+        {
+            newSCPosX = fetchedXposition + scMapOffsetX;
+            newscPosZ = scInitialPosition.z + scMapOffsetZ;
+        }
+
+        scTransform.position = new Vector3(newSCPosX, scTransform.position.y, newscPosZ);
 
         int searchWidth = 10;
 
         //search through and fill Fetched tiles with tiles form topdowngrid;
         for(int i = 0; i < tileGrid.tilemaps.Length; i++)
         {
-            //if(angleCheck == 1)
-            //{
-            //    for (int x = fetchedXposition - searchWidth; x < fetchedXposition + searchWidth; x++)
-            //    {
-            //        sideScrollerMap.SetTile(new Vector3Int(x, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(x*rotationX, fetchedZposition, 0)));
-            //    }
-            //}
-            //else if(angleCheck == -1)
-            //{
-            //    for (int z = fetchedZposition - searchWidth; z < fetchedZposition + searchWidth; z++)
-            //    {
-            //        sideScrollerMap.SetTile(new Vector3Int(z, Mathf.FloorToInt(tileGrid.tilemaps[i].transform.position.y - 1), 0), tileGrid.tilemaps[i].GetTile(new Vector3Int(fetchedXposition, z*rotationZ, 0)));
-            //    }
-            //}
 
             if (angleCheck == 1)
             {
@@ -77,38 +105,9 @@ public class TilemapPopulator : MonoBehaviour
                 }
             }
 
-
-
         }
 
-        //add tiles to respective position in sideScrollerGrid
-
-
-        //For Rotation:
-        //Rotate SideScroller view
-        //Swap fetchedZposition and fetchedXposition
-        //Swap x and fetchedZposition in GetTile
-        //Done
-
-
     }
-
-    
-    
-    // sort int arguments a,b,z in ascending order. after sorting the ints, create a dictionary with the sorted ints as values and their number in the sorted order as keys starting with 1. return the sorted ints as a string.
-    public string SortInts(int a, int b, int c)
-    {
-        int[] ints = new int[3] { a, b, c };
-        System.Array.Sort(ints);
-        Dictionary<int, int> dict = new Dictionary<int, int>();
-        for (int i = 0; i < ints.Length; i++)
-        {
-            dict.Add(i + 1, ints[i]);
-        }
-        return dict[1].ToString() + dict[2].ToString() + dict[3].ToString();
-    }
-
-
 
 }
 

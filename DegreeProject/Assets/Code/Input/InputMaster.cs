@@ -234,7 +234,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""positive"",
                     ""id"": ""4dc0ae42-b0ca-413c-bfac-29f8699989fe"",
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
@@ -245,7 +245,7 @@ public partial class @InputMaster : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
+                    ""name"": ""negative"",
                     ""id"": ""af9077d1-19f9-4a60-b0ed-da2415840bd8"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",

@@ -50,15 +50,12 @@ public class PlayerController : MonoBehaviour
 
         controls = new InputMaster();
         controls.Enable();
-        
-
-
 
         TopDownCamera.gameObject.SetActive(true);
 
         //when toggling to TD
-        rb.useGravity = false;
-        rb.isKinematic = true;
+        //rb.useGravity = false;
+        //rb.isKinematic = true;
 
         //UnbindSideScrollerControls();
         BindTopDownControls();
@@ -146,8 +143,7 @@ public class PlayerController : MonoBehaviour
         rotationFixer = -rotationFixer;
 
         Transform scCam = SideScrollerCamera.transform;
-        scCam.position = new Vector3(scCam.position.z * rotationInput * rotationFixer, scCam.position.y, scCam.position.x * rotationInput * rotationFixer);
-
+        scCam.localPosition = new Vector3(scCam.localPosition.z * rotationInput * rotationFixer, scCam.localPosition.y, scCam.localPosition.x * rotationInput * rotationFixer);
 
         Vector3 rotationTD = new(0, 0, rotationInput*90);
         Vector3 rotationSC = new(0, rotationInput*-90, 0);
@@ -178,6 +174,8 @@ public class PlayerController : MonoBehaviour
             tileRotatorZ = -1;
         }
 
+        tmp.FetchSCMap(tileRotatorX, tileRotatorZ, rotationFixer);
+
     }
 
     private void TopDownMove()
@@ -189,7 +187,20 @@ public class PlayerController : MonoBehaviour
     private void SideScrollerMove()
     {
         var modifier = moveSpeed * Time.fixedDeltaTime * moveInputSideScroller;
-        rb.MovePosition(rb.position + new Vector3(modifier, 0, 0));
+
+        if(rotationFixer == 1)
+        {
+            rb.MovePosition(rb.position + new Vector3(modifier*tileRotatorX, 0, 0));
+        }
+        else if(rotationFixer == -1)
+        {
+            rb.MovePosition(rb.position + new Vector3(0, 0, modifier*tileRotatorZ));
+        }
+        else
+        {
+            Debug.Log("rotationFixer is not 1 or -1");
+        }
+
     }
 
 
@@ -211,8 +222,8 @@ public class PlayerController : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Floor(transform.position.z) + 0.5f);
 
                 //when toggling to SC
-                rb.useGravity = true;
-                rb.isKinematic = false;
+                //rb.useGravity = true;
+                //rb.isKinematic = false;
 
                 BindSideScrollerControls();
                 UnbindTopDownControls();
@@ -226,8 +237,8 @@ public class PlayerController : MonoBehaviour
                 TopDownCamera.gameObject.SetActive(true);
 
                 //when toggling to TD
-                rb.useGravity = false;
-                rb.isKinematic = true;
+                //rb.useGravity = false;
+                //rb.isKinematic = true;
 
 
 
