@@ -2690,8 +2690,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TopDownList:
   - {fileID: 11400000, guid: 717a7d13ec138d046bf0f2d4b3804658, type: 2}
+  - {fileID: 11400000, guid: d2e35930698c8f04aa0cd8881f77b7d1, type: 2}
+  - {fileID: 11400000, guid: e01527152dc58dd4fa36dfe5ed8b9586, type: 2}
+  - {fileID: 11400000, guid: e46dd891728774941b8a2e7383275a0d, type: 2}
+  - {fileID: 11400000, guid: f6bd9139621935b45b8a06b100b36670, type: 2}
   SideScrollerList:
   - {fileID: 11400000, guid: 553ff4816b183064194c975818287c7e, type: 2}
+  - {fileID: 11400000, guid: d8ac28382fcc7ce40b602c6ee14ecd88, type: 2}
+  - {fileID: 11400000, guid: eaaa84847d043984a90843dccdd2157c, type: 2}
+  - {fileID: 11400000, guid: 6ee846b7602a9964bb5749352f5f2234, type: 2}
+  - {fileID: 11400000, guid: 30c0b0c4f21b274499058e44e41ba7ef, type: 2}
 --- !u!1 &1518567575
 GameObject:
   m_ObjectHideFlags: 0
